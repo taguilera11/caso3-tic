@@ -10,7 +10,7 @@ public class BuzonEntrada extends BuzonBasico{
 
     @Override
     public synchronized void depositar(Correo correo, Thread cliente) {
-        if (lleno()) {
+        while (lleno()) {
             try {
                 System.out.println("[BuzonEntrada]: Buzon lleno, el cliente " + ((Cliente)cliente).getIdCliente() + " espera para depositar el correo " + correo.getId());
                 wait();
@@ -20,7 +20,7 @@ public class BuzonEntrada extends BuzonBasico{
         }
         System.out.println("[Cliente "+((Cliente)cliente).getIdCliente()+"]: Depositando correo " + correo.getId());
         super.depositar(correo, cliente);
-        notify();
+        notifyAll();
     }
 
     @Override
@@ -34,7 +34,9 @@ public class BuzonEntrada extends BuzonBasico{
             }
         }
         Correo correo = super.extraer();
+        if (correo != null) {
         System.out.println("[BuzonEntrada]: Extrayendo correo " + correo.getId());
+        }
         notify();
         return correo;
     }
