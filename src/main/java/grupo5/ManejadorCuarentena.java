@@ -55,10 +55,11 @@ public class ManejadorCuarentena extends Thread {
             //Si se llega al FIN desactivar al manejador
             if(c.esFin()){
 
-                activo=false;
+
                 System.out.println("[MANEJADOR CUARENTENA] recibió FIN, cerrando...");
-                this.interrupt();
-                return;
+                vaciarCuarentena();
+                activo=false;
+                continue;
 
             }
 
@@ -109,6 +110,21 @@ public class ManejadorCuarentena extends Thread {
         reintentos++;
         }
     }
+
+    private void vaciarCuarentena() {
+        synchronized (cuarentena) {
+        while (!cuarentena.vacio()) {
+            Correo restante = cuarentena.extraer();
+            if (restante != null && !restante.esFin()) {
+                restante.setTiempoCuarentena(0L); // fuerza su liberación inmediata
+                entrega.depositar(restante, this);
+                System.out.println("[MANEJADOR CUARENTENA] liberó correo restante id=" + restante.getId());
+            }
+        }
+    }
+    System.out.println("[MANEJADOR CUARENTENA] cuarentena vaciada.");
+}
+
 
 
     }

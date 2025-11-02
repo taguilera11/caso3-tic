@@ -30,7 +30,8 @@ public class Filtro extends Thread{
     public void run() {
         System.out.println("[FILTRO " + idFiltro + "] iniciado.");
         try {
-            while (true) {
+            while (!finEnviado) {
+
                 Correo c = buzonEntrada.extraer();
                 if (c == null) continue;
 
@@ -53,8 +54,16 @@ public class Filtro extends Thread{
                     
                         // Si ya recibió todos los FIN 
                         if (!finEnviado && finesTotalesRecibidos >= totalClientes) {
+                            // Espera hasta que la cuarentena esté vacía
+                            System.out.println("[FILTRO " + idFiltro + "] esperando a que cuarentena se vacíe antes de enviar FIN global...");
+                            while (!buzonCuarentena.vacio()) {
+                            Thread.sleep(100); // espera semi-activa
+                            }
+
                             enviarFinGlobal();
                             finEnviado = true;
+                            System.out.println("[FILTRO " + idFiltro + "] cuarentena vacía. FIN global enviado a entrega.");
+                            break;
                         }
 
                     }
@@ -67,6 +76,9 @@ public class Filtro extends Thread{
                     procesarCorreo(c);
                 }
             }
+
+            System.out.println("[FILTRO " + idFiltro + "] terminado.");
+
         } catch (InterruptedException e) {
             System.err.println("[FILTRO " + idFiltro + "] interrumpido.");
         }
@@ -85,7 +97,7 @@ public class Filtro extends Thread{
         } else {
             //Espera semiactiva
             depositarSemiActivo(c, buzonEntrega);
-            System.out.println("[FILTRO " + idFiltro + "] envió c válido a entrega");
+            System.out.println("[FILTRO " + idFiltro + "] envió correo válido a entrega");
         }
 
 
@@ -127,6 +139,11 @@ public class Filtro extends Thread{
         buzonCuarentena.depositar(finCorreo, this);
         buzonEntrega.depositar(finCorreo, this);
         System.out.println("[FILTRO " + idFiltro + "] envió FIN global a cuarentena y entrega");
+
+        //Despierta a los demás filtros que puedan estar bloqueados en extraer()
+        synchronized (buzonEntrada) {
+        buzonEntrada.notifyAll();
+        }
     }
 
 }

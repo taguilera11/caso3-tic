@@ -46,7 +46,7 @@ public class BuzonEntrega extends BuzonBasico{
             Correo correo = cola.poll();
 
             System.out.println("[BUZÓN ENTREGA] se extrajo: " + correo.getTipo() + " (id=" + correo.getId() + ")");
-
+            System.out.println("Restantes en cola " + cola.size());
             // Libera espacio y notifica a los productores
             notifyAll();
 
