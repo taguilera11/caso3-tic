@@ -14,7 +14,7 @@ public abstract class BuzonBasico implements Buzon {
     }
 
     @Override
-    public synchronized void depositar(Thread thread,Correo correo) {
+    public synchronized void depositar(Correo correo,Thread thread) {
         if (cola.size() < capacidad) {
             cola.add(correo);
         }
