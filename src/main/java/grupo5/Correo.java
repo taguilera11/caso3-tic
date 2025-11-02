@@ -55,4 +55,15 @@ public class Correo {
     public void setTiempoCuarentena(Long tiempoCuarentena) {
         this.tiempoCuarentena = tiempoCuarentena;
     }
+
+    @Override
+    public String toString() {
+        return "Correo{" +
+                "id=" + id +
+                ", tipo=" + tipo +
+                ", esSpam=" + esSpam +
+                ", tiempoCuarentena=" + tiempoCuarentena +
+                ", origen='" + origen + '\'' +
+                '}';
+    }
 }
