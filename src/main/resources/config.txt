@@ -1,0 +1,6 @@
+numeroClientes=2
+numeroCorreosPorCliente=3
+numeroFiltros=2
+numeroServidores=2
+capacidadEntrada=5
+capacidadEntrega=1

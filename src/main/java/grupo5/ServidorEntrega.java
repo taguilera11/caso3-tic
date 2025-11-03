@@ -10,10 +10,7 @@ public class ServidorEntrega extends Thread {
     private int idServidor;
     private BuzonEntrega buzonEntrega;
     private boolean activo;
-    private boolean inicioRecibido=false;
     private Random random = new Random();
-    
-
 
     public ServidorEntrega(int id, BuzonEntrega buzonEntrega){
 
@@ -27,7 +24,7 @@ public class ServidorEntrega extends Thread {
 
         activo=true;
 
-
+        //Espera activa y chequea desde el inicio del sistema si algo llega al buzon de entrega
         while(activo){
 
             Correo c = buzonEntrega.extraer();
@@ -36,18 +33,11 @@ public class ServidorEntrega extends Thread {
 
                 continue;
             }
-
+            //Deje el mennsaje de cuando si se condicionaba pero dada la correcion en Slack ya no se condiciona el arranque
             if (c.esInicio()){
-                inicioRecibido=true;
-                System.out.println("[SERVIDOR " + idServidor + "] recibió INICIO. Listo para procesar correos.");
+                System.out.println("[SERVIDOR " + idServidor + "] recibió INICIO. Listo para procesar correos desde el arranque.");
                 continue;
             }
-
-            if (!inicioRecibido) {
-                 // Ignora todo hasta recibir su inicio
-                continue;
-            }
-
 
 
             if( c.esFin()){
@@ -78,4 +68,3 @@ public class ServidorEntrega extends Thread {
     }
 
 }
-
