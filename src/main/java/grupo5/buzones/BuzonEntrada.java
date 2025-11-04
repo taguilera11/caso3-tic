@@ -14,6 +14,7 @@ public class BuzonEntrada extends BuzonBasico{
             try {
                 System.out.println("[BuzonEntrada]: Buzon lleno, el cliente " + ((Cliente)cliente).getIdCliente() + " espera para depositar el correo " + correo.getId());
                 wait();
+                System.out.print("[Cliente "+((Cliente)cliente).getIdCliente()+"]: Despierta\n");
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

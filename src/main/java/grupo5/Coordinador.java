@@ -57,7 +57,6 @@ public class Coordinador {
         for (Filtro filtro : hilosFiltros) filtro.start();
         for (ServidorEntrega servidor : hilosServidores) servidor.start();
         for (Cliente cliente : hilosClientes) cliente.start();
-
     }
 
     public void esperarFin() {
@@ -69,7 +68,6 @@ public class Coordinador {
                 e.printStackTrace();
             }
         }
-
         //  Esperar filtros
         for (Filtro filtro : hilosFiltros) {
             try {
@@ -78,14 +76,12 @@ public class Coordinador {
                 e.printStackTrace();
             }
         }
-
         //  Esperar manejador
         try {
             manejadorCuarentena.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         //  Esperar servidores
         for (ServidorEntrega servidor : hilosServidores) {
             try {
@@ -104,6 +100,10 @@ public class Coordinador {
         } else {
             System.out.println("Buzon Entrada: " + buzonEntrada.vacio() + ", Buzon Cuarentena: " + buzonCuarentena.vacio() + ", Buzon Entrega: " + buzonEntrega.vacio());
             System.out.println("Aún hay mensajes en los buzones. El sistema no puede cerrarse.");
+            if (!buzonEntrega.vacio()) {
+                Correo correo = buzonEntrega.extraer();
+                System.out.println("Buzón Entrada no vacío. Primer correo en cola: " + correo);
+            }
         }
     }
 
