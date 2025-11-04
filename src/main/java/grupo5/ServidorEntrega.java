@@ -9,13 +9,18 @@ public class ServidorEntrega extends Thread {
     private static final AtomicInteger counter = new AtomicInteger(1);
     private int idServidor;
     private BuzonEntrega buzonEntrega;
+    private int finRecibidos;
+    private int totalServidores;
     private boolean activo;
     private Random random = new Random();
+    
 
-    public ServidorEntrega(int id, BuzonEntrega buzonEntrega){
+
+    public ServidorEntrega(BuzonEntrega buzonEntrega,int totalServidores){
 
         this.idServidor = counter.getAndIncrement();
         this.buzonEntrega=buzonEntrega;
+        this.totalServidores=totalServidores;
     }
 
     @Override
@@ -41,6 +46,21 @@ public class ServidorEntrega extends Thread {
 
 
             if( c.esFin()){
+
+                //esto era para corregir lo del correo restante, pero como se corrigio en filtros no hace nada pero pue slo dejo por si acaso
+                synchronized (this) {
+                finRecibidos++;
+                if (finRecibidos == totalServidores) {
+                     //ultimo servidor: vacía la cola
+                    while (!buzonEntrega.vacio()) {
+                        Correo restante = buzonEntrega.extraer();
+                        if (restante != null){
+                            procesar(restante);
+                            System.out.println("[SERVIDOR " + idServidor + "] vaciando residual: " + restante);
+                        }
+                    }
+                }
+            }
                 System.out.println("[SERVIDOR " + idServidor + "] recibió FIN. Terminando...");
                 activo=false;
                 break;
@@ -53,6 +73,7 @@ public class ServidorEntrega extends Thread {
         System.out.println("[SERVIDOR " + idServidor + "] finalizado.");
 
     }
+    
 
     private void procesar(Correo c){
 

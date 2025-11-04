@@ -56,7 +56,7 @@ public class Filtro extends Thread{
                         if (!finEnviado && finesTotalesRecibidos >= totalClientes) {
                             // Espera hasta que la cuarentena esté vacía
                             System.out.println("[FILTRO " + idFiltro + "] esperando a que cuarentena se vacíe antes de enviar FIN global...");
-                            while (!buzonCuarentena.vacio()) {
+                            while (!buzonCuarentena.vacio() || !buzonEntrega.vacio()) {
                             Thread.sleep(100); // espera semi-activa
                             }
 

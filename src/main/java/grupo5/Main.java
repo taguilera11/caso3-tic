@@ -37,7 +37,7 @@ public class Main {
 
         // Inicializar servidores
         for (int i = 0; i < numServidores; i++) {
-            servidores[i] = new ServidorEntrega(i + 1, buzonEntrega);
+            servidores[i] = new ServidorEntrega(buzonEntrega,numServidores);
         }
 
         // Lanzar hilos en orden lógico

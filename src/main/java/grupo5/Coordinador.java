@@ -43,7 +43,7 @@ public class Coordinador {
 
         //Crear servidores de entrega
         for (int i = 0; i < cfg.getNumeroServidores(); i++) {
-            ServidorEntrega servidor = new ServidorEntrega(i + 1, buzonEntrega);
+            ServidorEntrega servidor = new ServidorEntrega(buzonEntrega, cfg.getNumeroServidores());
             hilosServidores.add(servidor);
         }
 

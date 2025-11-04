@@ -1,5 +1,5 @@
 numeroClientes=2
-numeroCorreosPorCliente=3
+numeroCorreosPorCliente=15
 numeroFiltros=2
 numeroServidores=2
 capacidadEntrada=5
